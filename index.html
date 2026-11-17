@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -19,21 +20,23 @@
             <button id="hint-close" type="button" class="rounded px-2 py-1">Zatvori</button>
         </div>
 
-        <form id="add-form" class="space-y-3 rounded bg-white p-4 shadow">
+        <form id="add-form" class="space-y-3 rounded bg-white p-4 shadow" novalidate>
             <h2 class="text-xl font-semibold">Novi film</h2>
 
             <div>
                 <label for="title" class="block text-sm font-medium">Naziv</label>
-                <input id="title" name="title" type="text" 
-                    class="w-full rounded border border-slate-300 px-1 py-1">
+
+                <input id="title" name="title" type="text" class="w-full rounded border border-slate-300 px-1 py-1"
+                    required minlength="2" aria-describedby="title-error">
+
                 <p id="title-error" class="text-sm text-red-600"></p>
             </div>
 
             <div class="flex gap-3">
                 <div class="flex-1">
                     <label for="genre" class="block text-sm font-medium">Žanr</label>
-                    <select id="genre" name="genre"
-                    class="w-full rounded border border-slate-300 px-2 py-1">
+                    <select id="genre" name="genre" class="w-full rounded border border-slate-300 px-2 py-1" required
+                        aria-describedby="genre-error">
                         <option value="">Odaberi žanr</option>
                         <option value="animirani">Animirani</option>
                         <option value="dokumentarni">Dokumentarni</option>
@@ -46,7 +49,8 @@
                 <div class="flex-1">
                     <label for="minutes" class="block text-sm font-medium">Trajanje (min)</label>
                     <input id="minutes" name="minutes" type="number" class="w-full rounded border border-slate-300
-                    px-2 py-1"></input>
+                    px-2 py-1" required min="1" max="300" step="1">
+
                     <p id="minutes-error" class="text-sm text-red-600"></p>
                 </div>
 
@@ -54,10 +58,21 @@
                     <input name="watched" type="checkbox">Već pogledano
                 </label>
 
-                <button type="submit" class="rounded bg-indigo-700 px-4  py-2 font-medium text-white hover:bg-indigo-700"> Dodaj </button>
+                <button type="submit"
+                    class="rounded bg-indigo-700 px-4  py-2 font-medium text-white hover:bg-indigo-700"> Dodaj </button>
             </div>
 
         </form>
+
+        <div class="flex flex-wrap gap-3">
+            <input id="search" type="search" placeholder="Pretraži po nazivu" aria-label="Pretraga"
+            class="flex-1 rounded border border-slate-300 bg-white px-2 py-1">
+            <select id="genre-filter" aria-label="Žanr" class="rounded border border-slate-300 bg-white px-2 py-1">
+                <option value="title">Naslov</option>
+                <option value="minutes-asc">Trajanje: od kraćeg</option>
+                <option value="minutes-decs">Trajanje: od dužeg</option>
+            </select>
+        </div>
 
         <p id="counter" class="text-sm text-slate-600"></p>
 
@@ -67,7 +82,7 @@
 
     </main>
 
-    
+
 </body>
 
 </html>
