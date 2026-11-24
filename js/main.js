@@ -54,10 +54,21 @@ function visibleFilms() {
         const matchesGenre = state.genre === "all" || film.genre === state.genre;
         return matchesQuery && matchesGenre;
     });
+
+    const comparisons = {
+        "title": (a,b) => a.title.localeCompare(b.title, "hr"),
+        "minutes-asc":(a,b) => a.minutes - b.minutes,
+        "minutes-desc":(a,b) => b.minutes - a.minutes
+    };
+
+    return filtered.toSorted(comparisons[state.sort]);
 }
 
 function render() {
-    list.replaceChildren(...films.map(createIteam));
+    const visible = visibleFilms();
+    list.replaceChildren(...visible.map(createIteam));
+    counter.textContent = `Prikazano ${visible.length} od ${films.length}`;
+    empty.hidden = visible.length > 0;
 }
 
 list.addEventListener("click", (event) => {
@@ -126,7 +137,7 @@ form.addEventListener("submit", (event) => {
     submitAttempted = true;
     titleInput.value = titleInput.value.trim();
     checkUniqeTitle();
-    const fields = [...form.elements].filter((el) =>  el.willValidate && el.required); // [title genre, mnutes]
+    const fields = [...form.elements].filter((el) =>  el.willValidate && el.required); // [title genre, minutes]
     const results = fields.map(checkField); // npr. [true, false, true]
     const firstInvalid = fields[results.indexOf(false)]; // npr genre <- orvi ne točan
     //fokusiramo prvi netočan
@@ -160,6 +171,36 @@ form.addEventListener("submit", (event) => {
 form.addEventListener("input", (event) => {
     if (event.target === titleInput) checkUniqeTitle();
     if (submitAttempted && event.target.required) checkField(event.title);
+});
+
+const search = document.querySelector("#search");
+search.addEventListener("input", (event) => {
+    state.query =  event.target.value;
+    render();
+});
+
+search.addEventListener("keydown", (event) => {
+    if(event.key === "Escape") {
+        search.value = "";
+        state.query = "";
+        render();
+    }
+});
+
+const genreFilter = document.querySelector("#genre-filter");
+const genres = [...new Set(films.map((film) => film.genre))].sort((a, b) => a.localeCompare(b, "hr"));
+for (const  genre of genres) {
+    genreFilter.append(new Option(genre, genre));
+}
+
+genreFilter.addEventListener("change", (event) => {
+    state.genre = event.target.value;
+    render();
+});
+
+document.querySelector("#sort").addEventListener("change", (event) => {
+    state.sort =  event.target.value;
+    render;
 });
 
 render();
